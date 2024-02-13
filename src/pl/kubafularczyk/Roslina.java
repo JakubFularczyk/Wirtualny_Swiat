@@ -42,4 +42,8 @@ public abstract class Roslina extends Organizm {
         return szansaNaZasianie == 0;
     }
 
+    @Override
+    protected void kolizja() {
+
+    }
 }

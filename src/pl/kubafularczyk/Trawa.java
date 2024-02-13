@@ -8,11 +8,6 @@ public class Trawa extends Roslina {
     }
 
     @Override
-    protected void kolizja() {
-
-    }
-
-    @Override
     public Organizm stworz(Polozenie polozenie, Swiat swiat) {
         return new Trawa(polozenie, swiat);
     }

@@ -7,11 +7,6 @@ public class Czlowiek extends Zwierze {
     }
 
     @Override
-    protected void kolizja() {
-
-    }
-
-    @Override
     public Organizm stworz(Polozenie polozenie, Swiat swiat) {
         return new Czlowiek(polozenie, swiat);
     }

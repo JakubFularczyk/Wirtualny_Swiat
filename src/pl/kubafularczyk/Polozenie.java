@@ -14,16 +14,8 @@ public class Polozenie {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     /**
@@ -44,7 +36,8 @@ public class Polozenie {
     public boolean czyPoprawne(int szerokoscPlanszy, int wysokoscPlanszy) {
         return y < wysokoscPlanszy && x < szerokoscPlanszy && y >= 0 && x >= 0;
     }
-    protected boolean czyWolne(Kierunek kierunek, Organizm[][] plansza){
-        return plansza[kierunek.getY()][kierunek.getX()] == null;
+
+    protected boolean czyWolne(Organizm[][] plansza){
+        return plansza[this.y][this.x] == null;
     }
 }

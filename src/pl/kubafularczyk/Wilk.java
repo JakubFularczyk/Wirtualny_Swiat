@@ -14,11 +14,6 @@ public class Wilk extends Zwierze {
     }
 
     @Override
-    protected void kolizja() {
-
-    }
-
-    @Override
     public Organizm stworz(Polozenie polozenie, Swiat swiat) {
         return new Wilk(polozenie, swiat);
     }
