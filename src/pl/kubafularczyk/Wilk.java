@@ -3,7 +3,7 @@ package pl.kubafularczyk;
 public class Wilk extends Zwierze {
 
     public Wilk(Polozenie polozenie, Swiat swiat){
-        super(polozenie,swiat); // wywolanie konstruktora z klasy Zwierze (zrob wszystko co przy tworzeniu zwierzecia)
+        super(polozenie,swiat);
         this.symbol = "W";
 
     }

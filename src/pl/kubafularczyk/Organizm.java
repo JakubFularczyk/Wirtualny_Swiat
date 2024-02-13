@@ -10,6 +10,7 @@ public abstract class Organizm {
     protected Swiat swiat;
     protected String symbol;
 
+
     public Organizm(Polozenie polozenie, Swiat swiat) {
         this.polozenie = polozenie;
         this.swiat = swiat;
@@ -35,5 +36,10 @@ public abstract class Organizm {
     }
     public void zabij() {
         zyje = false;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
     }
 }

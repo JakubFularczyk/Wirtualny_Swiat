@@ -1,9 +1,9 @@
 package pl.kubafularczyk;
 
-import java.util.HashSet;
-import java.util.Set;
+
 
 public abstract class Zwierze extends Organizm {
+
 
     public Zwierze(Polozenie polozenie, Swiat swiat) {
         super(polozenie,swiat);
@@ -42,9 +42,8 @@ public abstract class Zwierze extends Organizm {
 
     @Override
     protected void kolizja(Organizm atakowanyOrganizm) {
-        // TODO komentator? jakiś dłuższy opis tego co sie stało
-        System.out.println("Kolizja na pozycji: atakujacy: " + this.polozenie + " atakowany: " + atakowanyOrganizm.polozenie);
-
+        swiat.komentator.kolizjaPostaci(polozenie, atakowanyOrganizm);
+        swiat.komentator.usmierceniePostaci(swiat.getOrganizm(polozenie), atakowanyOrganizm);
         // TODO chwilowe rozwiazanie :) atakujacy poki co zawsze wygrywa
         atakowanyOrganizm.zabij();
         Organizm[][] plansza = swiat.getPlansza();

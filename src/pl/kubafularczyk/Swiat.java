@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class Swiat {
     private List<Organizm> organizmy;
+    public Komentator komentator = new Komentator();
     // TODO pod koniec projektu: sprobowac wyrzucic bezposrednie zmienianie planszy przez organizmy i zastapic budowaniem planszy na podstawie listy
     private Organizm[][] plansza;
     private int wysokosc;
@@ -160,7 +161,9 @@ public class Swiat {
 
     /**
      * TODO do opisania (czym sie rozni od dodajOrganizm)
-     * @param organizm
+     * Dodaje organizmy jedynie na planszy nie zmieniajac
+     * przy tym listy organizmow.
+     * @param organizm organizm
      */
     public void dodajOrganizmDoPlanszy(@NotNull Organizm organizm) {
         Polozenie polozenie = organizm.getPolozenie();

@@ -7,6 +7,7 @@ import java.util.Set;
 
 public abstract class Roslina extends Organizm {
 
+
     public Roslina(Polozenie polozenie, Swiat swiat) {
         super(polozenie, swiat);
         inicjatywa = 0;
@@ -28,8 +29,8 @@ public abstract class Roslina extends Organizm {
             brakDostepnychKierunkow = kierunki.size() == Kierunek.values().length;
         } while(!swiat.czyPozycjaWolna(polozenieNowejRosliny) && !brakDostepnychKierunkow);
         if (brakDostepnychKierunkow) {
-            // nie ma dostepnych kierunkow wiec nie wykonujemy rozsiewania
-            return; // jesli mielibysmy obiekt komentatora, to moglby to skomentowac
+            swiat.komentator.brakKierunkowZasiania(polozenie,swiat.getOrganizm(polozenie));
+            return;
         }
         Organizm organizm = stworz(polozenieNowejRosliny, swiat);
         swiat.dodajOrganizm(organizm);
