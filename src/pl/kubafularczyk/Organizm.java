@@ -18,7 +18,7 @@ public abstract class Organizm {
 
     protected abstract void akcja();
 
-    protected abstract void kolizja();
+    protected abstract void kolizja(Organizm atakowanyOrganizm);
 
     public String getSymbol(){
         return symbol;
@@ -32,5 +32,8 @@ public abstract class Organizm {
 
     public boolean czyZyje() {
         return zyje;
+    }
+    public void zabij() {
+        zyje = false;
     }
 }

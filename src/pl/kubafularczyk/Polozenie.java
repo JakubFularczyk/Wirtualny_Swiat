@@ -40,4 +40,9 @@ public class Polozenie {
     protected boolean czyWolne(Organizm[][] plansza){
         return plansza[this.y][this.x] == null;
     }
+
+    @Override
+    public String toString() {
+        return "Polozenie{" + "x=" + x + ", y=" + y + "}";
+    }
 }

@@ -1,5 +1,7 @@
 package pl.kubafularczyk;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -94,8 +96,7 @@ public class Swiat {
             } else {
                 organizm = new Trawa(polozenie, this);
             }
-            organizmy.add(organizm);
-            plansza[polozenie.getY()][polozenie.getX()] = organizm;
+            dodajOrganizm(organizm);
         }
 
 
@@ -136,7 +137,7 @@ public class Swiat {
         if (!polozenie.czyPoprawne(szerokosc, wysokosc)) {
             return false; // mogloby byc rzucenie wyjatku w przyszlosci
         }
-        return plansza[polozenie.getY()][polozenie.getX()] == null;
+        return getOrganizm(polozenie) == null;
     }
 
     /**
@@ -146,12 +147,24 @@ public class Swiat {
      */
     public void dodajOrganizm(Organizm organizm) {
         organizmy.add(organizm);
-        Polozenie polozenie = organizm.getPolozenie();
-        plansza[polozenie.getY()][polozenie.getX()] = organizm;
+        dodajOrganizmDoPlanszy(organizm);
     }
 
     public Organizm[][] getPlansza() {
         return plansza;
+    }
+
+    public Organizm getOrganizm(@NotNull Polozenie polozenie) {
+        return plansza[polozenie.getY()][polozenie.getX()];
+    }
+
+    /**
+     * TODO do opisania (czym sie rozni od dodajOrganizm)
+     * @param organizm
+     */
+    public void dodajOrganizmDoPlanszy(@NotNull Organizm organizm) {
+        Polozenie polozenie = organizm.getPolozenie();
+        plansza[polozenie.getY()][polozenie.getX()] = organizm;
     }
 
     public int getWysokosc() {

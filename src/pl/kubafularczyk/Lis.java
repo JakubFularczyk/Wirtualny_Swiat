@@ -30,7 +30,7 @@ public class Lis extends Zwierze {
 
         Polozenie starePolozenie = polozenie;
         polozenie = nowePolozenie;
-        plansza[polozenie.getY()][polozenie.getX()] = this;
+        swiat.dodajOrganizmDoPlanszy(this);
         plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
     }
 

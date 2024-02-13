@@ -29,16 +29,31 @@ public abstract class Zwierze extends Organizm {
             polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
         } while(polozenieNiepoprawne);
 
-        Polozenie starePolozenie = polozenie;
-        polozenie = nowePolozenie;
-        plansza[polozenie.getY()][polozenie.getX()] = this;
-        plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+        Organizm organizm = swiat.getOrganizm(nowePolozenie);
+        if(organizm != null) {
+            kolizja(organizm);
+        } else {
+            Polozenie starePolozenie = polozenie;
+            polozenie = nowePolozenie;
+            swiat.dodajOrganizmDoPlanszy(this);
+            plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+        }
     }
 
     @Override
-    protected void kolizja() {
+    protected void kolizja(Organizm atakowanyOrganizm) {
+        // TODO komentator? jakiś dłuższy opis tego co sie stało
+        System.out.println("Kolizja na pozycji: atakujacy: " + this.polozenie + " atakowany: " + atakowanyOrganizm.polozenie);
 
+        // TODO chwilowe rozwiazanie :) atakujacy poki co zawsze wygrywa
+        atakowanyOrganizm.zabij();
+        Organizm[][] plansza = swiat.getPlansza();
+
+        // TODO ten kawalek powtarza sie przy akcji, moze da sie z tego zrobic metode?
+        Polozenie starePolozenie = polozenie;
+        polozenie = atakowanyOrganizm.getPolozenie();
+        swiat.dodajOrganizmDoPlanszy(this);
+        plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
     }
-
 
 }

@@ -43,7 +43,7 @@ public abstract class Roslina extends Organizm {
     }
 
     @Override
-    protected void kolizja() {
-
+    protected void kolizja(Organizm atakowanyOrganizm) {
+        System.out.println("Kolizja"); // TODO komentator? jakiś dłuższy opis tego co sie stało
     }
 }
