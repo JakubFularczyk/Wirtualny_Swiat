@@ -33,10 +33,7 @@ public abstract class Zwierze extends Organizm {
         if(organizm != null) {
             kolizja(organizm);
         } else {
-            Polozenie starePolozenie = polozenie;
-            polozenie = nowePolozenie;
-            swiat.dodajOrganizmDoPlanszy(this);
-            plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+            ruchOrganizmu(nowePolozenie, plansza);
         }
     }
 
@@ -49,8 +46,30 @@ public abstract class Zwierze extends Organizm {
         Organizm[][] plansza = swiat.getPlansza();
 
         // TODO ten kawalek powtarza sie przy akcji, moze da sie z tego zrobic metode?
+        ruchOrganizmu(atakowanyOrganizm, plansza);
+
+    }
+    /**
+     * Pobiera polozenie organizmu na ktorego miejsce zostaje wstawiony nowy organizm,
+     * którego stare polozenie zostaje wyzerowane
+     * @param atakowanyOrganizm organizm ktorego miejsce zostaje zastapione
+     * @param plansza plansza
+     */
+    protected void ruchOrganizmu(Organizm atakowanyOrganizm, Organizm[][] plansza){
         Polozenie starePolozenie = polozenie;
         polozenie = atakowanyOrganizm.getPolozenie();
+        swiat.dodajOrganizmDoPlanszy(this);
+        plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+    }
+    /**
+     * Pobiera polozenie na ktorego miejsce zostaje wstawiony nowy organizm,
+     * którego stare polozenie zostaje wyzerowane
+     * @param nowePolozenie polozenie ktorego miejsce zostaje uzyte do wstawienia organizmu
+     * @param plansza plansza
+     */
+    protected void ruchOrganizmu(Polozenie nowePolozenie , Organizm[][] plansza){
+        Polozenie starePolozenie = polozenie;
+        polozenie = nowePolozenie;
         swiat.dodajOrganizmDoPlanszy(this);
         plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
     }
