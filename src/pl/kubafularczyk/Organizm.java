@@ -15,6 +15,7 @@ public abstract class Organizm {
         this.polozenie = polozenie;
         this.swiat = swiat;
         this.zyje = true;
+        swiat.dodajOrganizm(this);
     }
 
     protected abstract void akcja();
@@ -34,6 +35,7 @@ public abstract class Organizm {
     public boolean czyZyje() {
         return zyje;
     }
+
     public void zabij() {
         zyje = false;
     }
@@ -42,4 +44,16 @@ public abstract class Organizm {
     public String toString() {
         return this.getClass().getSimpleName();
     }
+
+    protected Polozenie losowaniePolozenia() {
+        Polozenie nowePolozenie;
+        boolean polozenieNiepoprawne;
+        do {
+            Kierunek nowyKierunek = Kierunek.losuj();
+            nowePolozenie = polozenie.stworzPrzesunietaKopie(nowyKierunek);
+            polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
+        } while (polozenieNiepoprawne);
+        return nowePolozenie;
+    }
+
 }

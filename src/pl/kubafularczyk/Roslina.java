@@ -29,7 +29,7 @@ public abstract class Roslina extends Organizm {
             brakDostepnychKierunkow = kierunki.size() == Kierunek.values().length;
         } while(!swiat.czyPozycjaWolna(polozenieNowejRosliny) && !brakDostepnychKierunkow);
         if (brakDostepnychKierunkow) {
-            swiat.komentator.brakKierunkowZasiania(polozenie,swiat.getOrganizm(polozenie));
+            Komentator.brakKierunkowZasiania(polozenie,swiat.getOrganizm(polozenie));
             return;
         }
         Organizm organizm = stworz(polozenieNowejRosliny, swiat);
@@ -39,7 +39,7 @@ public abstract class Roslina extends Organizm {
 
     protected boolean czyZasieje(){
         Random random = new Random();
-        int szansaNaZasianie = random.nextInt(10);
+        int szansaNaZasianie = random.nextInt(20);
         return szansaNaZasianie == 0;
     }
 

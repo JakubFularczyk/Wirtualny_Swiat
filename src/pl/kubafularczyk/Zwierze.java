@@ -1,6 +1,7 @@
 package pl.kubafularczyk;
 
 
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Zwierze extends Organizm {
 
@@ -21,14 +22,7 @@ public abstract class Zwierze extends Organizm {
     protected void akcja() {
 
         Organizm[][] plansza = swiat.getPlansza();
-        Polozenie nowePolozenie;
-        boolean polozenieNiepoprawne;
-        do {
-            Kierunek nowyKierunek = Kierunek.losuj();
-            nowePolozenie = polozenie.stworzPrzesunietaKopie(nowyKierunek);
-            polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
-        } while(polozenieNiepoprawne);
-
+        Polozenie nowePolozenie = losowaniePolozenia();
         Organizm organizm = swiat.getOrganizm(nowePolozenie);
         if(organizm != null) {
             kolizja(organizm);
@@ -39,37 +33,41 @@ public abstract class Zwierze extends Organizm {
 
     @Override
     protected void kolizja(Organizm atakowanyOrganizm) {
-        swiat.komentator.kolizjaPostaci(polozenie, atakowanyOrganizm);
-        swiat.komentator.usmierceniePostaci(swiat.getOrganizm(polozenie), atakowanyOrganizm);
         // TODO chwilowe rozwiazanie :) atakujacy poki co zawsze wygrywa
-        atakowanyOrganizm.zabij();
-        Organizm[][] plansza = swiat.getPlansza();
-
-        // TODO ten kawalek powtarza sie przy akcji, moze da sie z tego zrobic metode?
-        ruchOrganizmu(atakowanyOrganizm, plansza);
-
+        if(this.getClass().equals(atakowanyOrganizm.getClass())){
+            // TODO poki co istnieje szansa ze nowy organizm powstanie w miejscu starego - do poprawienia (musimy losowac puste miejsce)
+            Polozenie nowePolozenie = losowaniePolozenia();
+            Komentator.rozmnozenieZwierzecia(this, atakowanyOrganizm, nowePolozenie);
+            this.stworz(nowePolozenie, swiat);
+        } else {
+            Komentator.kolizjaPostaci(polozenie, atakowanyOrganizm);
+            Komentator.usmierceniePostaci(this, atakowanyOrganizm);
+            atakowanyOrganizm.zabij();
+            Organizm[][] plansza = swiat.getPlansza();
+            ruchOrganizmu(atakowanyOrganizm, plansza);
+        }
     }
+
+    // TODO do przeniesienia do Organizmu + dodanie flagi ktora bedzie kontrolowala czy ma byc losowane dowolne poprawne polozenie
+    // czy dowolne puste (w przypadku dowolnego pustego nie bedzie adnotacji NotNull
+
+
     /**
-     * Pobiera polozenie organizmu na ktorego miejsce zostaje wstawiony nowy organizm,
-     * którego stare polozenie zostaje wyzerowane
-     * @param atakowanyOrganizm organizm ktorego miejsce zostaje zastapione
-     * @param plansza plansza
+     * Przemieszcza organizm na pole atakowanego organizmu i aktualizuje stare polozenie na planszy.
+     * @param atakowanyOrganizm Organizm
+     * @param plansza Organizm[][]
      */
     protected void ruchOrganizmu(Organizm atakowanyOrganizm, Organizm[][] plansza){
-        Polozenie starePolozenie = polozenie;
-        polozenie = atakowanyOrganizm.getPolozenie();
-        swiat.dodajOrganizmDoPlanszy(this);
-        plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+        ruchOrganizmu(atakowanyOrganizm.getPolozenie(), plansza);
     }
     /**
-     * Pobiera polozenie na ktorego miejsce zostaje wstawiony nowy organizm,
-     * którego stare polozenie zostaje wyzerowane
-     * @param nowePolozenie polozenie ktorego miejsce zostaje uzyte do wstawienia organizmu
-     * @param plansza plansza
+     * Przemieszcza organizm na pole wskazywane przez nowe polozenie i aktualizuje stare polozenie na planszy.
+     * @param docelowePolozenie Polozenie
+     * @param plansza Organizm[][]
      */
-    protected void ruchOrganizmu(Polozenie nowePolozenie , Organizm[][] plansza){
+    protected void ruchOrganizmu(Polozenie docelowePolozenie , Organizm[][] plansza){
         Polozenie starePolozenie = polozenie;
-        polozenie = nowePolozenie;
+        polozenie = docelowePolozenie;
         swiat.dodajOrganizmDoPlanszy(this);
         plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
     }

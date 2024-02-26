@@ -5,7 +5,6 @@ public class Wilk extends Zwierze {
     public Wilk(Polozenie polozenie, Swiat swiat){
         super(polozenie,swiat);
         this.symbol = "W";
-
     }
 
     @Override

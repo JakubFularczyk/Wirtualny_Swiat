@@ -87,17 +87,23 @@ public class Swiat {
      * Metoda tworzy organizmy na planszy na podstawie losowo wygenerowanych położeń. Ilość organizmów zależna jest
      * od wielkości i szerokości planszy. W tej chwili wspierane są dwa rodzaje organizmów: wilk i trawa.
      */
+    // TODO mozemy tworzyc organizmy korzystajac z metody stworz i wywolywac ja na jakims zbiorze organizmow zamknietych w tablicy/liscie
+    // po dodaniu wspolnego konstruktora ta metoda jest nieco trudniejsza do napisania
     private void stworzOrganizmy() {
         int liczbaUnikalnychOrganizmow = 2;
+
+        // przyklad
+        /*List<Organizm> organizmyDoKopiowania = List.of(
+                new Wilk(null, this),
+                new Trawa(null, this));*/
+
         for(int i = 0; i < liczbaOrganizmow; i++){
             Polozenie polozenie = losujPrawidlowePolozenie();
-            Organizm organizm;
             if (i < liczbaOrganizmow/liczbaUnikalnychOrganizmow) {
-                organizm = new Wilk(polozenie, this);
+                new Wilk(polozenie, this); // nie potrzebujemy tego obiektu po utworzeniu bo jest od razu przypisywany do planszy
             } else {
-                organizm = new Trawa(polozenie, this);
+                new Trawa(polozenie, this);
             }
-            dodajOrganizm(organizm);
         }
 
 
@@ -160,7 +166,6 @@ public class Swiat {
     }
 
     /**
-     * TODO do opisania (czym sie rozni od dodajOrganizm)
      * Dodaje organizmy jedynie na planszy nie zmieniajac
      * przy tym listy organizmow.
      * @param organizm organizm
