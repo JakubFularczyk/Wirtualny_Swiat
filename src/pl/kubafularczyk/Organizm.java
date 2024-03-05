@@ -1,6 +1,9 @@
 package pl.kubafularczyk;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 public abstract class Organizm {
 
     private boolean zyje;
@@ -53,6 +56,28 @@ public abstract class Organizm {
             nowePolozenie = polozenie.stworzPrzesunietaKopie(nowyKierunek);
             polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
         } while (polozenieNiepoprawne);
+        return nowePolozenie;
+    }
+
+    protected Polozenie losowanieWolnegoPolozenia() throws BrakWolnegoPolozeniaException {
+        Polozenie nowePolozenie;
+        boolean polozenieNiepoprawne;
+        boolean polozenieZajete;
+        Set<Kierunek> wykorzystaneKierunki = new HashSet<>();
+        do {
+            polozenieZajete = false;
+            if(wykorzystaneKierunki.size() == Kierunek.values().length) {
+                throw new BrakWolnegoPolozeniaException();
+            }
+            Kierunek nowyKierunek = Kierunek.losuj();
+            wykorzystaneKierunki.add(nowyKierunek);
+            nowePolozenie = polozenie.stworzPrzesunietaKopie(nowyKierunek);
+            polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
+            if (polozenieNiepoprawne) {
+                continue;
+            }
+            polozenieZajete = !nowePolozenie.czyWolne(swiat.getPlansza());
+        } while (polozenieNiepoprawne || polozenieZajete);
         return nowePolozenie;
     }
 

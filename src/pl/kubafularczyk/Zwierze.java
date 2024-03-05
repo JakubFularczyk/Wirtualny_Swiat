@@ -33,13 +33,20 @@ public abstract class Zwierze extends Organizm {
 
     @Override
     protected void kolizja(Organizm atakowanyOrganizm) {
-        // TODO chwilowe rozwiazanie :) atakujacy poki co zawsze wygrywa
+        // TODO 05.03.2024 chwilowe rozwiazanie :) atakujacy poki co zawsze wygrywa
         if(this.getClass().equals(atakowanyOrganizm.getClass())){
-            // TODO poki co istnieje szansa ze nowy organizm powstanie w miejscu starego - do poprawienia (musimy losowac puste miejsce)
-            Polozenie nowePolozenie = losowaniePolozenia();
+            // TODO 05.03.2024 poki co istnieje szansa ze nowy organizm powstanie w miejscu starego - do poprawienia (musimy losowac puste miejsce)
+            Polozenie nowePolozenie;
+            try {
+                nowePolozenie = losowanieWolnegoPolozenia();
+            } catch (BrakWolnegoPolozeniaException e) {
+                System.out.println("Zwierze nie ma sie gdzie rozmnozyc");
+                return;
+            }
             Komentator.rozmnozenieZwierzecia(this, atakowanyOrganizm, nowePolozenie);
             this.stworz(nowePolozenie, swiat);
         } else {
+
             Komentator.kolizjaPostaci(polozenie, atakowanyOrganizm);
             Komentator.usmierceniePostaci(this, atakowanyOrganizm);
             atakowanyOrganizm.zabij();
@@ -47,11 +54,6 @@ public abstract class Zwierze extends Organizm {
             ruchOrganizmu(atakowanyOrganizm, plansza);
         }
     }
-
-    // TODO do przeniesienia do Organizmu + dodanie flagi ktora bedzie kontrolowala czy ma byc losowane dowolne poprawne polozenie
-    // czy dowolne puste (w przypadku dowolnego pustego nie bedzie adnotacji NotNull
-
-
     /**
      * Przemieszcza organizm na pole atakowanego organizmu i aktualizuje stare polozenie na planszy.
      * @param atakowanyOrganizm Organizm

@@ -7,6 +7,8 @@ public class Lis extends Zwierze {
 
     public Lis(Polozenie polozenie, Swiat swiat) {
         super(polozenie, swiat);
+        this.symbol = "L";
+        this.inicjatywa = 7;
     }
 
     @Override
@@ -14,19 +16,13 @@ public class Lis extends Zwierze {
         // TODO do weryfikacji po zaimplementowaniu poprawnej akcji i kolizji dla zwierzat
         Organizm[][] plansza = swiat.getPlansza();
         Polozenie nowePolozenie;
-        boolean polozenieNiepoprawne;
-        boolean polozenieZajete;
-        Set<Kierunek> wykorzystaneKierunki = new HashSet<>();
-        do {
-            if(wykorzystaneKierunki.size() == Kierunek.values().length) {
-                return;
-            }
-            Kierunek nowyKierunek = Kierunek.losuj();
-            wykorzystaneKierunki.add(nowyKierunek);
-            nowePolozenie = polozenie.stworzPrzesunietaKopie(nowyKierunek);
-            polozenieNiepoprawne = !nowePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc());
-            polozenieZajete = !nowePolozenie.czyWolne(plansza);
-        } while(polozenieNiepoprawne || polozenieZajete);
+        try {
+            nowePolozenie = losowanieWolnegoPolozenia();
+        } catch (BrakWolnegoPolozeniaException e) {
+            // TODO 05.03.2024 docelowo komentator:
+            System.out.println("Lis nie ma sie gdzie poruszyc");
+            return;
+        }
 
         Polozenie starePolozenie = polozenie;
         polozenie = nowePolozenie;

@@ -49,6 +49,25 @@ public class Swiat {
             organizm.akcja();
         }*/
 
+        //posortowanie w liscie zyjacych organizmow sortujac je wzgledem malejacej inicjatywy
+        // 3 0 1 1 1 0 0 0 1
+        // 3 1 1 1 0 0 0 1 0
+        // 3 1 1 1 0 0 1 0 0
+        // 3 1 1 1 0 1 0 0 0
+        // 3 1 1 1 1 0 0 0 0
+
+        // TODO 05.03.2024 Kolejnosc poruszania sie zwierzat zalezy takze od ich wieku, dodaj ta zaleznosc
+        for (int j = 0; j < organizmy.size(); j++) {
+            for (int i = 0; i < organizmy.size() - 1; i++) {
+                Organizm organizm1 = organizmy.get(i);
+                Organizm organizm2 = organizmy.get(i + 1);
+                if (organizm1.inicjatywa < organizm2.inicjatywa) {
+                    organizmy.set(i + 1, organizm1);
+                    organizmy.set(i, organizm2);
+                }
+            }
+        }
+
         for (int i = 0; i < organizmy.size(); i++) {
             Organizm organizm = organizmy.get(i);
             if(organizm.czyZyje()) {
