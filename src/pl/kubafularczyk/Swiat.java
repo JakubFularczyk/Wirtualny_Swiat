@@ -1,15 +1,29 @@
 package pl.kubafularczyk;
 
 import org.jetbrains.annotations.NotNull;
+import pl.kubafularczyk.organizmy.FabrykaOrganizmow;
+import pl.kubafularczyk.organizmy.Organizm;
+import pl.kubafularczyk.organizmy.TypOrganizmu;
+import pl.kubafularczyk.organizmy.zwierzeta.Czlowiek;
+import pl.kubafularczyk.organizmy.zwierzeta.Lis;
+import pl.kubafularczyk.organizmy.zwierzeta.Zwierze;
+import pl.kubafularczyk.utils.Utility;
+import pl.kubafularczyk.utils.Komentator;
+import pl.kubafularczyk.nawigacja.Polozenie;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.DirectoryStream;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Swiat {
     private List<Organizm> organizmy;
+
     public Komentator komentator = new Komentator();
     // TODO pod koniec projektu: sprobowac wyrzucic bezposrednie zmienianie planszy przez organizmy i zastapic budowaniem planszy na podstawie listy
     private Organizm[][] plansza;
@@ -22,20 +36,33 @@ public class Swiat {
         this.plansza = new Organizm[wysokosc][szerokosc];
         this.wysokosc = wysokosc;
         this.szerokosc = szerokosc;
-        this.liczbaOrganizmow = szerokosc * wysokosc / 10;
+        this.liczbaOrganizmow = szerokosc * wysokosc / 30;
         this.random = new Random();
+        wyczyscLog();
     }
 
-
     public void uruchom() {
-        Scanner scanner = new Scanner(System.in); // TODO do usuniecia gdy pojawi sie gracz w rozgrywce
+        Scanner scanner = new Scanner(System.in);
         stworzOrganizmy();
         while(czyKontynuowacRozgrywke()){
             rysujSwiat();
-            scanner.nextLine(); // TODO do usuniecia gdy pojawi sie gracz w rozgrywce
+            scanner.nextLine();
             wykonajTure();
         }
         System.out.println("Gra zakonczona");
+    }
+
+    private void posortujOrganizmyPoInicjatywie(){
+        for (int j = 0; j < organizmy.size(); j++) {
+            for (int i = 0; i < organizmy.size() - 1; i++) {
+                Organizm organizm1 = organizmy.get(i);
+                Organizm organizm2 = organizmy.get(i + 1);
+                if (organizm1.getInicjatywa() < organizm2.getInicjatywa()) {
+                    organizmy.set(i + 1, organizm1);
+                    organizmy.set(i, organizm2);
+                }
+            }
+        }
     }
 
     private void wykonajTure() {
@@ -49,57 +76,50 @@ public class Swiat {
             organizm.akcja();
         }*/
 
-        //posortowanie w liscie zyjacych organizmow sortujac je wzgledem malejacej inicjatywy
-        // 3 0 1 1 1 0 0 0 1
-        // 3 1 1 1 0 0 0 1 0
-        // 3 1 1 1 0 0 1 0 0
-        // 3 1 1 1 0 1 0 0 0
-        // 3 1 1 1 1 0 0 0 0
+        // znajdujemy czlowieka
+        // czlowiek.pobierzKolejnyRuch()
+        // potem akcja korzystalaby z pobranego wczesniej ruchu
+        Optional<Czlowiek> czlowiek = wyszukajCzlowieka();
+        czlowiek.ifPresent(Czlowiek::pobierzKolejnyRuch);
 
-        // TODO 05.03.2024 Kolejnosc poruszania sie zwierzat zalezy takze od ich wieku, dodaj ta zaleznosc
-        for (int j = 0; j < organizmy.size(); j++) {
-            for (int i = 0; i < organizmy.size() - 1; i++) {
-                Organizm organizm1 = organizmy.get(i);
-                Organizm organizm2 = organizmy.get(i + 1);
-                if (organizm1.inicjatywa < organizm2.inicjatywa) {
-                    organizmy.set(i + 1, organizm1);
-                    organizmy.set(i, organizm2);
-                }
-            }
-        }
-
+        posortujOrganizmyPoInicjatywie();
         for (int i = 0; i < organizmy.size(); i++) {
             Organizm organizm = organizmy.get(i);
-            if(organizm.czyZyje()) {
+            if(organizm.czyZyje() && !organizm.czyWykonalRuch()) {
                 organizm.akcja();
             }
         }
 
         organizmy = organizmy.stream()
                 .filter(Organizm::czyZyje) // to samo co: organizm -> organizm.czyZyje()
+                .peek(Organizm::wlaczRuch)
                 .collect(Collectors.toList());
     }
-
     private void rysujSwiat(){
         final int dlugosc = 3;
         for(int i = -1; i < wysokosc; i++){
             for(int j = -1; j < szerokosc; j++){
+                String tekst;
                 if (i == -1 && j == -1) {
-                    System.out.print(Utility.uzupelnijSpacjami("\\", dlugosc));
+                    tekst = "\\";
                 } else if(i == -1){
-                    System.out.print(Utility.uzupelnijSpacjami(j,dlugosc));
+                    tekst = j + "";
                 } else if(j == -1){
-                    System.out.print(Utility.uzupelnijSpacjami(i,dlugosc));
+                    tekst = i + "";
                 } else if(plansza[i][j] != null){
-                    System.out.print(Utility.uzupelnijSpacjami(plansza[i][j].getSymbol(),dlugosc));
+                    tekst = plansza[i][j].getSymbol();
                 } else {
-                    System.out.print(Utility.uzupelnijSpacjami(".",dlugosc));
+                   tekst = ".";
                 }
+                String symbol = Utility.uzupelnijSpacjami(tekst, dlugosc);
+                System.out.print(symbol);
+                Komentator.zapisDoPliku(symbol);
             }
             System.out.println();
+            Komentator.zapisDoPliku("\n");
+
         }
     }
-
 
 
     /**
@@ -109,23 +129,19 @@ public class Swiat {
     // TODO mozemy tworzyc organizmy korzystajac z metody stworz i wywolywac ja na jakims zbiorze organizmow zamknietych w tablicy/liscie
     // po dodaniu wspolnego konstruktora ta metoda jest nieco trudniejsza do napisania
     private void stworzOrganizmy() {
-        int liczbaUnikalnychOrganizmow = 2;
-
-        // przyklad
-        /*List<Organizm> organizmyDoKopiowania = List.of(
-                new Wilk(null, this),
-                new Trawa(null, this));*/
-
-        for(int i = 0; i < liczbaOrganizmow; i++){
-            Polozenie polozenie = losujPrawidlowePolozenie();
-            if (i < liczbaOrganizmow/liczbaUnikalnychOrganizmow) {
-                new Wilk(polozenie, this); // nie potrzebujemy tego obiektu po utworzeniu bo jest od razu przypisywany do planszy
-            } else {
-                new Trawa(polozenie, this);
+        TypOrganizmu[] typyOrganizmow = TypOrganizmu.values();
+        //TypOrganizmu[] typyOrganizmow = {TypOrganizmu.CYBER_OWCA, TypOrganizmu.BARSZCZ_SOSNOWSKIEGO};
+        for (TypOrganizmu typ : typyOrganizmow) {
+            if (typ == TypOrganizmu.CZLOWIEK) {
+                continue;
+            }
+            for (int i = 0; i < liczbaOrganizmow; i++) {
+                Polozenie polozenie = losujPrawidlowePolozenie();
+                FabrykaOrganizmow.stworz(typ, polozenie, this);
             }
         }
-
-
+        Polozenie polozenieCzlowieka = losujPrawidlowePolozenie();
+        FabrykaOrganizmow.stworz(TypOrganizmu.CZLOWIEK,polozenieCzlowieka, this);
     }
 
     /**
@@ -135,7 +151,25 @@ public class Swiat {
      */
     private boolean czyKontynuowacRozgrywke() {
 
-        return true;
+        /*return organizmy.stream() //
+            .map(Organizm::getTyp) //
+            .filter(TypOrganizmu.CZLOWIEK::equals) //
+            .count() == 1;*/
+
+        /*return organizmy.stream() //
+            .filter(o -> TypOrganizmu.CZLOWIEK.equals(o.getTyp())) //
+            .count() == 1;*/
+
+        return organizmy.stream() //
+
+            .anyMatch(o -> TypOrganizmu.CZLOWIEK.equals(o.getTyp()));
+
+        /*for(Organizm organizm: organizmy) {
+            if(TypOrganizmu.CZLOWIEK.equals(organizm.getTyp())) {
+                return true;
+            }
+        }
+        return false;*/
     }
 
     /**
@@ -155,7 +189,7 @@ public class Swiat {
     }
 
     /**
-     * TODO do opisania przypadek z polozeniem poza plansza
+     * Sprawdza czy polozenie nie wychodzi poza obszar planszy.
      * @param polozenie polozenie do sprawdzenia
      * @return boolean
      */
@@ -176,10 +210,34 @@ public class Swiat {
         dodajOrganizmDoPlanszy(organizm);
     }
 
+    private void wyczyscLog() {
+        try (RandomAccessFile file = new RandomAccessFile(Utility.getLogFileName(), "rw")) { // tryb rw - read/write
+            file.setLength(0); // ustawienie dlugosci pliku na 0 czyli wyczyszczenie go
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Polozenie> getPolozeniaOrganizmow(@NotNull TypOrganizmu typ) {
+
+        // zapis lambd do zmiennej - czesc programowania funkcyjnego
+        // Function<Organizm, Integer> organizmIntegerFunction = (Organizm organizm) -> organizm.getSila();
+        // Predicate<Organizm> organizmFilter = (Organizm organizm) -> organizm.czyZyje();
+
+        return organizmy.stream() //
+                        .filter(organizm -> organizm.getTyp().equals(typ)) //
+                        .map(Organizm::getPolozenie) // odpowiednik organizm -> organizm.getPolozenie()
+                        .collect(Collectors.toList());
+
+    }
+
     public Organizm[][] getPlansza() {
         return plansza;
     }
-
+    /**
+     * Pobiera organizm z planszy z konkretnego  polozenia
+     * @param polozenie polozenie
+     */
     public Organizm getOrganizm(@NotNull Polozenie polozenie) {
         return plansza[polozenie.getY()][polozenie.getX()];
     }
@@ -193,6 +251,16 @@ public class Swiat {
         Polozenie polozenie = organizm.getPolozenie();
         plansza[polozenie.getY()][polozenie.getX()] = organizm;
     }
+
+    private Optional<Czlowiek> wyszukajCzlowieka() {
+        for (Organizm organizm : organizmy) {
+            if (TypOrganizmu.CZLOWIEK.equals(organizm.getTyp())) {
+                return Optional.of((Czlowiek)organizm);
+            }
+        }
+        return Optional.empty();
+    }
+
 
     public int getWysokosc() {
         return wysokosc;

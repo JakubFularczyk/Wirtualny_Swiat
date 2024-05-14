@@ -1,6 +1,11 @@
-package pl.kubafularczyk;
+package pl.kubafularczyk.utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Utility {
+
+    private static String logFileName;
 
     /**
      * Uzupelnia liczbę spacjami z prawej strony az do podanej dlugosci.
@@ -58,7 +63,21 @@ public class Utility {
         return liczbaCyfr;
     }
 
+    public static String getLogFileName() {
+        if (logFileName != null && !logFileName.isBlank()) {
+            return logFileName;
+        }
 
+        String prefix = "src/notepad/informacje-";
+        String suffix = ".txt";
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        String formattedDate = simpleDateFormat.format(date);
+
+        logFileName = prefix + formattedDate + suffix;
+        return logFileName;
+    }
 
 
 }

@@ -1,4 +1,10 @@
-package pl.kubafularczyk;
+package pl.kubafularczyk.nawigacja;
+
+import pl.kubafularczyk.Swiat;
+import pl.kubafularczyk.organizmy.Organizm;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Polozenie {
 
@@ -36,8 +42,23 @@ public class Polozenie {
     public boolean czyPoprawne(int szerokoscPlanszy, int wysokoscPlanszy) {
         return y < wysokoscPlanszy && x < szerokoscPlanszy && y >= 0 && x >= 0;
     }
+    public List<Polozenie> pobierzPolozeniaDookola(Polozenie polozenie, Swiat swiat) {
+        List<Polozenie> polozenia = new ArrayList<>();
+        for(Kierunek kierunek : Kierunek.values()){
+            Polozenie przesunietePolozenie = polozenie.stworzPrzesunietaKopie(kierunek);
+            if (przesunietePolozenie.czyPoprawne(swiat.getSzerokosc(), swiat.getWysokosc())) {
+                polozenia.add(przesunietePolozenie);
+            }
+        }
+        return polozenia;
+    }
 
-    protected boolean czyWolne(Organizm[][] plansza){
+
+    /**
+     * Sprawdza czy polozenie na planszy nie jest zajete przez inny organizm.
+     * @return czy polozenie jest wolne.
+     */
+    public boolean czyWolne(Organizm[][] plansza){
         return plansza[this.y][this.x] == null;
     }
 

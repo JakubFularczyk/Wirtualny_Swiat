@@ -1,5 +1,12 @@
-package pl.kubafularczyk;
+package pl.kubafularczyk.organizmy.rosliny;
 
+
+import pl.kubafularczyk.organizmy.FabrykaOrganizmow;
+import pl.kubafularczyk.organizmy.Organizm;
+import pl.kubafularczyk.Swiat;
+import pl.kubafularczyk.utils.Komentator;
+import pl.kubafularczyk.nawigacja.Kierunek;
+import pl.kubafularczyk.nawigacja.Polozenie;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -15,7 +22,9 @@ public abstract class Roslina extends Organizm {
 
 
     @Override
-    protected void akcja() {
+    public void akcja() {
+
+        super.akcja();
         if(!czyZasieje()) {
             return;
         }
@@ -29,10 +38,10 @@ public abstract class Roslina extends Organizm {
             brakDostepnychKierunkow = kierunki.size() == Kierunek.values().length;
         } while(!swiat.czyPozycjaWolna(polozenieNowejRosliny) && !brakDostepnychKierunkow);
         if (brakDostepnychKierunkow) {
-            Komentator.brakKierunkowZasiania(polozenie,swiat.getOrganizm(polozenie));
+            Komentator.brakKierunkowZasiania(this);
             return;
         }
-        Organizm organizm = stworz(polozenieNowejRosliny, swiat);
+        Organizm organizm = FabrykaOrganizmow.stworz(this.getTyp(), polozenieNowejRosliny, swiat);
         swiat.dodajOrganizm(organizm);
 
     }
@@ -45,6 +54,6 @@ public abstract class Roslina extends Organizm {
 
     @Override
     protected void kolizja(Organizm atakowanyOrganizm) {
-        System.out.println("Kolizja"); // TODO komentator? jakiś dłuższy opis tego co sie stało
+        System.out.println("Kolizja");
     }
 }

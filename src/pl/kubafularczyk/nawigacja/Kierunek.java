@@ -1,4 +1,4 @@
-package pl.kubafularczyk;
+package pl.kubafularczyk.nawigacja;
 
 import java.util.Random;
 
@@ -15,7 +15,10 @@ public enum Kierunek {
         this.x = x;
         this.y = y;
     }
-
+    /**
+     * Losuje kierunek z listy ENUM GORA,DOL,LEWO,PRAWO
+     * @return wylosowany kierunek.
+     */
     public static Kierunek losuj() {
         Random random = new Random();
         Kierunek[] kierunki = Kierunek.values();
@@ -29,4 +32,7 @@ public enum Kierunek {
     public int getY() {
         return y;
     }
+
+
+
 }
