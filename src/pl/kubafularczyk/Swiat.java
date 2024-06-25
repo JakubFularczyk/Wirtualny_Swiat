@@ -47,11 +47,9 @@ public class Swiat {
     }
 
     public void uruchom() {
-        Scanner scanner = new Scanner(System.in);
         stworzOrganizmy();
         while(czyKontynuowacRozgrywke()){
             rysujSwiat();
-            scanner.nextLine();
             wykonajTure();
         }
         System.out.println("Gra zakonczona");
@@ -80,12 +78,12 @@ public class Swiat {
         /*for(Organizm organizm : organizmy) {
             organizm.akcja();
         }*/
-
+        Scanner scanner = new Scanner(System.in);
         // znajdujemy czlowieka
         // czlowiek.pobierzKolejnyRuch()
         // potem akcja korzystalaby z pobranego wczesniej ruchu
         Optional<Czlowiek> czlowiek = wyszukajCzlowieka();
-        czlowiek.ifPresent(Czlowiek::pobierzKolejnyRuch);
+        czlowiek.ifPresentOrElse(Czlowiek::pobierzKolejnyRuch, scanner::nextLine);
 
         posortujOrganizmyPoInicjatywie();
         for (int i = 0; i < organizmy.size(); i++) {
@@ -100,6 +98,7 @@ public class Swiat {
                 .peek(Organizm::wlaczRuch)
                 .collect(Collectors.toList());
     }
+
     private void rysujSwiat(){
         final int dlugosc = 3;
         for(int i = -1; i < wysokosc; i++){
@@ -144,7 +143,9 @@ public class Swiat {
             }
         }
         Polozenie polozenieCzlowieka = losujPrawidlowePolozenie();
-        FabrykaOrganizmow.stworz(TypOrganizmu.CZLOWIEK,polozenieCzlowieka, this);
+        if(typyOrganizmow.contains(TypOrganizmu.CZLOWIEK)) {
+            FabrykaOrganizmow.stworz(TypOrganizmu.CZLOWIEK, polozenieCzlowieka, this);
+        }
     }
 
     /**
@@ -163,8 +164,7 @@ public class Swiat {
             .filter(o -> TypOrganizmu.CZLOWIEK.equals(o.getTyp())) //
             .count() == 1;*/
 
-        return organizmy.stream() //
-
+        return !typyOrganizmow.contains(TypOrganizmu.CZLOWIEK) || organizmy.stream() //
             .anyMatch(o -> TypOrganizmu.CZLOWIEK.equals(o.getTyp()));
 
         /*for(Organizm organizm: organizmy) {

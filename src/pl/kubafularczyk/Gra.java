@@ -1,8 +1,6 @@
 package pl.kubafularczyk;
-
 import pl.kubafularczyk.utils.ParametryStartowe;
 
-import java.util.Scanner;
 
 public class Gra {
 

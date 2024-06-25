@@ -6,7 +6,11 @@ import pl.kubafularczyk.Swiat;
 import pl.kubafularczyk.organizmy.Organizm;
 import pl.kubafularczyk.organizmy.TypOrganizmu;
 
+import java.util.Scanner;
+
 public class Czlowiek extends Zwierze {
+
+    private final Scanner scanner = new Scanner(System.in);
 
     public Czlowiek(Polozenie polozenie, Swiat swiat) {
         super(polozenie, swiat);
@@ -27,6 +31,7 @@ public class Czlowiek extends Zwierze {
 
     public void pobierzKolejnyRuch() {
         // pobranie ruchu musi miec wplyw na pozniejsze losowanie pozycji
+        scanner.nextLine();
     }
 }
 
