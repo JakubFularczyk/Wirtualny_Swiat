@@ -11,6 +11,8 @@ import pl.kubafularczyk.organizmy.rosliny.BarszczSosnowskiego;
 import pl.kubafularczyk.utils.Komentator;
 import pl.kubafularczyk.nawigacja.Polozenie;
 
+import java.util.Random;
+
 public abstract class Zwierze extends Organizm {
 
 
@@ -54,17 +56,46 @@ public abstract class Zwierze extends Organizm {
      */
     @Override
     protected void kolizja(Organizm atakowanyOrganizm) {
-        if(this.getTyp().equals(atakowanyOrganizm.getTyp())){
+        Random random = new Random();
+        /*if (this.getTyp().equals(atakowanyOrganizm.getTyp())) {
             rozmnoz(atakowanyOrganizm);
-        } else if(TypOrganizmu.BARSZCZ_SOSNOWSKIEGO.equals(atakowanyOrganizm.getTyp())) {
-            BarszczSosnowskiego atakowanyBarszcz = (BarszczSosnowskiego) atakowanyOrganizm;
-            atakowanyBarszcz.walczZ(this);
-        } else if(TypOrganizmu.GUARANA.equals(atakowanyOrganizm.getTyp())){
+        } else if (TypOrganizmu.BARSZCZ_SOSNOWSKIEGO.equals(atakowanyOrganizm.getTyp())) {
+            //BarszczSosnowskiego atakowanyBarszcz = (BarszczSosnowskiego) atakowanyOrganizm;
+            //atakowanyOrganizm.walczZ(this);
+            walczZ(atakowanyOrganizm);
+        } else if (TypOrganizmu.GUARANA.equals(atakowanyOrganizm.getTyp())) {
             dodajSile(this);
             walczZ(atakowanyOrganizm);
+        } else if (TypOrganizmu.ANTYLOPA.equals(atakowanyOrganizm.getTyp())){
+            if(random.nextInt(100) < 50) {
+                try {
+                    losowanieWolnegoPolozenia();
+                } catch (BrakWolnegoPolozeniaException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
             walczZ(atakowanyOrganizm);
+        }*/
+
+        if (this.getTyp().equals(atakowanyOrganizm.getTyp())) {
+            rozmnoz(atakowanyOrganizm);
+            return;
+        } else if (TypOrganizmu.ANTYLOPA.equals(atakowanyOrganizm.getTyp())) {
+            if (random.nextInt(100) < 50) {
+                try {
+                    Polozenie nowePolozenie = losowanieWolnegoPolozenia();
+                    Polozenie polozeniePrzedUcieczka = atakowanyOrganizm.getPolozenie();
+                    Komentator.ucieczkaOdAtaku(this, atakowanyOrganizm);
+                    przeniesOrganizm(atakowanyOrganizm, nowePolozenie, swiat.getPlansza());
+                    przeniesOrganizm(this, polozeniePrzedUcieczka, swiat.getPlansza());
+                    return;
+                } catch (BrakWolnegoPolozeniaException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        walczZ(atakowanyOrganizm);
     }
 
 
@@ -86,11 +117,6 @@ public abstract class Zwierze extends Organizm {
         Komentator.rozmnozenieZwierzecia(this, organizm, nowePolozenie);
         FabrykaOrganizmow.stworz(this.getTyp(), nowePolozenie, swiat, true);
     }
-
-    protected void dodajSile(Zwierze zwierze) {
-        zwierze.setSila(zwierze.getSila()+3);
-    }
-
 
 
 }

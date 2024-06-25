@@ -7,6 +7,7 @@ import pl.kubafularczyk.organizmy.TypOrganizmu;
 import pl.kubafularczyk.organizmy.zwierzeta.Czlowiek;
 import pl.kubafularczyk.organizmy.zwierzeta.Lis;
 import pl.kubafularczyk.organizmy.zwierzeta.Zwierze;
+import pl.kubafularczyk.utils.ParametryStartowe;
 import pl.kubafularczyk.utils.Utility;
 import pl.kubafularczyk.utils.Komentator;
 import pl.kubafularczyk.nawigacja.Polozenie;
@@ -23,20 +24,24 @@ import java.util.stream.Collectors;
 
 public class Swiat {
     private List<Organizm> organizmy;
-
     public Komentator komentator = new Komentator();
     // TODO pod koniec projektu: sprobowac wyrzucic bezposrednie zmienianie planszy przez organizmy i zastapic budowaniem planszy na podstawie listy
     private Organizm[][] plansza;
     private int wysokosc;
     private int szerokosc;
     private int liczbaOrganizmow;
+    private List<TypOrganizmu> typyOrganizmow;
     private final Random random;
-    public Swiat(int wysokosc, int szerokosc) {
+    private final ParametryStartowe parametry;
+
+    public Swiat(ParametryStartowe parametry) {
+        this.parametry = parametry;
+        this.szerokosc = parametry.getSzerokosc();
+        this.wysokosc = parametry.getWysokosc();
+        this.liczbaOrganizmow = parametry.getLiczbaOrganizmow();
+        this.typyOrganizmow = parametry.getTypyOrganizmow();
         this.organizmy  = new ArrayList<>();
         this.plansza = new Organizm[wysokosc][szerokosc];
-        this.wysokosc = wysokosc;
-        this.szerokosc = szerokosc;
-        this.liczbaOrganizmow = szerokosc * wysokosc / 30;
         this.random = new Random();
         wyczyscLog();
     }
@@ -124,13 +129,11 @@ public class Swiat {
 
     /**
      * Metoda tworzy organizmy na planszy na podstawie losowo wygenerowanych położeń. Ilość organizmów zależna jest
-     * od wielkości i szerokości planszy. W tej chwili wspierane są dwa rodzaje organizmów: wilk i trawa.
+     * od wielkości i szerokości planszy.
      */
     // TODO mozemy tworzyc organizmy korzystajac z metody stworz i wywolywac ja na jakims zbiorze organizmow zamknietych w tablicy/liscie
     // po dodaniu wspolnego konstruktora ta metoda jest nieco trudniejsza do napisania
     private void stworzOrganizmy() {
-        TypOrganizmu[] typyOrganizmow = TypOrganizmu.values();
-        //TypOrganizmu[] typyOrganizmow = {TypOrganizmu.CYBER_OWCA, TypOrganizmu.BARSZCZ_SOSNOWSKIEGO};
         for (TypOrganizmu typ : typyOrganizmow) {
             if (typ == TypOrganizmu.CZLOWIEK) {
                 continue;

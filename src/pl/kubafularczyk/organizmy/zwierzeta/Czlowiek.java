@@ -8,7 +8,7 @@ import pl.kubafularczyk.organizmy.TypOrganizmu;
 
 public class Czlowiek extends Zwierze {
 
-    public Czlowiek(Polozenie polozenie, Swiat swiat){
+    public Czlowiek(Polozenie polozenie, Swiat swiat) {
         super(polozenie, swiat);
         this.sila = 5;
         this.inicjatywa = 4;
@@ -26,12 +26,13 @@ public class Czlowiek extends Zwierze {
     }
 
     public void pobierzKolejnyRuch() {
-      // pobranie ruchu musi miec wplyw na pozniejsze losowanie pozycji
+        // pobranie ruchu musi miec wplyw na pozniejsze losowanie pozycji
     }
+}
 
-    @Override
-    protected Polozenie losowaniePolozenia() {
+  /*  @Override*/
+   /* protected Polozenie losowaniePolozenia() {
 
         return null;
     }
-}
+}*/

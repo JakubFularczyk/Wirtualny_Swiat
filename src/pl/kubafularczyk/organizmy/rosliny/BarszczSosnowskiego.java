@@ -38,7 +38,7 @@ public class BarszczSosnowskiego extends Roslina {
 
 
     @Override
-    protected WalczacaPara stworzWalczacaPare(Organizm atakujacyOrganizm, Organizm atakowanyOrganizm) {
+    protected WalczacaPara stworzWalczacaPare(Organizm atakowanyOrganizm) {
         if(!TypOrganizmu.CYBER_OWCA.equals(atakowanyOrganizm.getTyp())){
             return new WalczacaPara(atakowanyOrganizm, this);
         } else {

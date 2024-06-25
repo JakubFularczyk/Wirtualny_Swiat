@@ -1,5 +1,7 @@
 package pl.kubafularczyk;
 
+import pl.kubafularczyk.utils.ParametryStartowe;
+
 import java.util.Scanner;
 
 public class Gra {
@@ -10,14 +12,16 @@ public class Gra {
 
     // TODO do zastanowienia - czy warto przeniesc te metode do swiata
     private void stworzSwiat(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj wysokosc świata: ");
-        int wysokoscSwiata = scanner.nextInt();
-        System.out.println("Podaj szerokosc świata: ");
-        int szerokoscSwiata = scanner.nextInt();
 
-        Swiat swiat = new Swiat(wysokoscSwiata, szerokoscSwiata);
+        ParametryStartowe parametry = pobierzParametryStartowe();
+        Swiat swiat = new Swiat(parametry);
         swiat.uruchom();
+    }
+
+    ParametryStartowe pobierzParametryStartowe() {
+        ParametryStartowe parametry = new ParametryStartowe();
+        parametry.pobierz();
+        return parametry;
     }
 
 }

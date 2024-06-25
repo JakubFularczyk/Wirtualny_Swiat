@@ -1,5 +1,7 @@
 package pl.kubafularczyk.organizmy;
 
+import pl.kubafularczyk.exceptions.NieistniejacyOrganizmException;
+
 public enum TypOrganizmu {
 
 
@@ -25,5 +27,14 @@ public enum TypOrganizmu {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public static TypOrganizmu of(String symbol) {
+        for (TypOrganizmu t : TypOrganizmu.values()) {
+            if (t.getSymbol().equals(symbol)) {
+                return t;
+            }
+        }
+        throw new NieistniejacyOrganizmException();
     }
 }

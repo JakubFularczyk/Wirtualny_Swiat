@@ -63,6 +63,12 @@ public class Komentator {
         zapisDoPliku(komentarz);
     }
 
+    public static void ucieczkaOdAtaku(Organizm atakujacy, Organizm atakowany) {
+        String komentarz = "Ucieczka od ataku: atakujacy: " + atakujacy + " atakowany: " + atakowany + "\n";
+        System.out.print(komentarz);
+        zapisDoPliku(komentarz);
+    }
+
 
     // TODO** wyswietlanie komentarzy po prawej stronie planszy, numerowane od 1, na zasadzie dodatkowych kolumn
     // musialaby byc jakas maksymalna szerokosc kolumny

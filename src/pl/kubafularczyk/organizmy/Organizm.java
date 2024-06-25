@@ -87,8 +87,6 @@ public abstract class Organizm {
         this.wykonalRuch = false;
     }
 
-
-
     protected Polozenie losowaniePolozenia() throws BrakWolnegoPolozeniaException {
         Polozenie nowePolozenie;
         boolean polozenieNiepoprawne;
@@ -132,12 +130,21 @@ public abstract class Organizm {
      * @param atakowanyOrganizm Organizm.
      */
     public void walczZ(Organizm atakowanyOrganizm) {
-        WalczacaPara walczacaPara = stworzWalczacaPare(this, atakowanyOrganizm);
+        WalczacaPara walczacaPara = stworzWalczacaPare(atakowanyOrganizm);
         Komentator.kolizjaPostaci(this, atakowanyOrganizm);
+        atakowanyOrganizm.bronSie(this);
         przeniesOrganizmNaMiejsceSlabszego(walczacaPara, swiat.getPlansza());
     }
 
-    protected WalczacaPara stworzWalczacaPare(Organizm atakujacyOrganizm, Organizm atakowanyOrganizm) {
+    protected void bronSie(Organizm atakujacyOrganizm) {
+        // domyslnie organizm nie broni się
+    }
+    /**
+     * Metoda tworząca "parę" zwierząt ze sobą walczących.
+     * Metoda ustawia również które z zwierzat jest tym silniejszym ze wzgledu na porownanie sily zwierzat.
+     * @param atakowanyOrganizm Organizm.
+     */
+    protected WalczacaPara stworzWalczacaPare(Organizm atakowanyOrganizm) {
         if(this.sila > atakowanyOrganizm.getSila()){
             return new WalczacaPara(atakowanyOrganizm, this);
         } else {
@@ -146,13 +153,15 @@ public abstract class Organizm {
     }
 
     /**
-     * Przemieszcza organizm na pole slabszego organizmu i aktualizuje stare polozenie na planszy.
+     * Zabija slabszy organizm i przemieszcza silniejszy na pole slabszego jeśli silniejszy jest zwierzęciem.
+     * Aktualizuje stare polozenie na planszy.
      * @param walczacaPara walczaca para
      * @param plansza Organizm[][]
      */
     protected void przeniesOrganizmNaMiejsceSlabszego(WalczacaPara walczacaPara, Organizm[][] plansza){
         Organizm silniejszyOrganizm = walczacaPara.getSilniejszyOrganizm();
         Organizm slabszyOrganizm = walczacaPara.getSlabszyOrganizm();
+        // TODO jesli atakowany organizm umie sie bronic, to przeniesienie organizmu niekoniecznie musi zabijac slabszy!
         Komentator.usmierceniePostaci(silniejszyOrganizm, slabszyOrganizm);
         slabszyOrganizm.zabij();
         if (silniejszyOrganizm instanceof Zwierze) {
@@ -165,6 +174,10 @@ public abstract class Organizm {
         polozenie = docelowePolozenie;
         swiat.dodajOrganizmDoPlanszy(organizm);
         plansza[starePolozenie.getY()][starePolozenie.getX()] = null;
+    }
+
+    public void zwiekszSile(int wartosc) {
+        this.setSila(this.getSila()+wartosc);
     }
 
 }
