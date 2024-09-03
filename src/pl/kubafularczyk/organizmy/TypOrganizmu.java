@@ -4,8 +4,6 @@ import pl.kubafularczyk.exceptions.NieistniejacyOrganizmException;
 
 public enum TypOrganizmu {
 
-
-    //TODO znalezc unicode pasujace do postaci
     WILK("W"),//🐺
     LIS("L"),//🦊
     ANTYLOPA("A"),//🐐

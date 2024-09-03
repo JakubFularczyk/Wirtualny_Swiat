@@ -67,6 +67,7 @@ public class CyberOwca extends Owca {
                 return kierunek;
             }
         }
-        throw new NiedozwolonyKierunekException();
+        Polozenie niepoprawnyKierunek = new Polozenie(kierunekX, kierunekY);
+        throw new NiedozwolonyKierunekException("Niepoprawny kierunek dla owcy: " + niepoprawnyKierunek);
     }
 }

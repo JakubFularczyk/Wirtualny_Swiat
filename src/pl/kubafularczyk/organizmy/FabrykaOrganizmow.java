@@ -5,6 +5,7 @@ import pl.kubafularczyk.exceptions.NieistniejacyOrganizmException;
 import pl.kubafularczyk.nawigacja.Polozenie;
 import pl.kubafularczyk.organizmy.rosliny.*;
 import pl.kubafularczyk.organizmy.zwierzeta.*;
+import pl.kubafularczyk.organizmy.zwierzeta.czlowiek.Czlowiek;
 
 public class FabrykaOrganizmow {
 

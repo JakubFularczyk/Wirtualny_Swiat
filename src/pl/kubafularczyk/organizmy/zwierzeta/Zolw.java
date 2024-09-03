@@ -24,11 +24,13 @@ public class Zolw extends Zwierze {
             super.akcja();
         }
     }
+    //TODO poprawic kolizje, aktualnie zolw podczas ataku nie atakuje organizmow ponizej 5 sily
 
     @Override
-    protected void kolizja(Organizm atakowanyOrganizm) {
-        if(atakowanyOrganizm.getSila() >= 5) {
-            super.kolizja(atakowanyOrganizm);
+    protected void bronSie(Organizm atakujacyOrganizm) {
+        if(atakujacyOrganizm.getSila() < 5) {
+
+        } else {
         }
     }
 }

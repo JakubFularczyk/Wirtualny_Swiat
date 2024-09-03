@@ -9,7 +9,7 @@ import pl.kubafularczyk.organizmy.WalczacaPara;
 import pl.kubafularczyk.organizmy.zwierzeta.Zwierze;
 
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class BarszczSosnowskiego extends Roslina {

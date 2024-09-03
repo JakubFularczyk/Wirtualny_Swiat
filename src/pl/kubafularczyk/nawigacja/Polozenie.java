@@ -33,6 +33,17 @@ public class Polozenie {
         return new Polozenie(kierunek.getX() + x, kierunek.getY() + y);
     }
 
+
+    /**
+     * Tworzy kopie aktualnego polozenia przesuwając ja we wskazanym kierunku.
+     * @param kierunek Kierunek przesuniecia aktualnego polozenia.
+     * @param dlugoscKroku Odleglosc na ktora przesuwa sie stworzona kopia.
+     * @return Nowe polozenie.
+     */
+    public Polozenie stworzPrzesunietaKopie(Kierunek kierunek, int dlugoscKroku) {
+        return new Polozenie(kierunek.getX() * dlugoscKroku + x, kierunek.getY() * dlugoscKroku + y);
+    }
+
     /**
      * Sprawdza czy polozenie odpowiada pozycji na planszy.
      * @param szerokoscPlanszy szerokosc planszy.

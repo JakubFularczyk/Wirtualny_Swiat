@@ -69,8 +69,5 @@ public class Komentator {
         zapisDoPliku(komentarz);
     }
 
-
-    // TODO** wyswietlanie komentarzy po prawej stronie planszy, numerowane od 1, na zasadzie dodatkowych kolumn
-    // musialaby byc jakas maksymalna szerokosc kolumny
 }
 

@@ -1,25 +1,19 @@
 package pl.kubafularczyk;
 
 import org.jetbrains.annotations.NotNull;
+import pl.kubafularczyk.exceptions.NiedozwolonyKierunekException;
 import pl.kubafularczyk.organizmy.FabrykaOrganizmow;
 import pl.kubafularczyk.organizmy.Organizm;
 import pl.kubafularczyk.organizmy.TypOrganizmu;
-import pl.kubafularczyk.organizmy.zwierzeta.Czlowiek;
-import pl.kubafularczyk.organizmy.zwierzeta.Lis;
-import pl.kubafularczyk.organizmy.zwierzeta.Zwierze;
+import pl.kubafularczyk.organizmy.zwierzeta.czlowiek.Czlowiek;
 import pl.kubafularczyk.utils.ParametryStartowe;
 import pl.kubafularczyk.utils.Utility;
 import pl.kubafularczyk.utils.Komentator;
 import pl.kubafularczyk.nawigacja.Polozenie;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.file.DirectoryStream;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Swiat {
@@ -50,7 +44,11 @@ public class Swiat {
         stworzOrganizmy();
         while(czyKontynuowacRozgrywke()){
             rysujSwiat();
-            wykonajTure();
+            try {
+                wykonajTure();
+            } catch (NiedozwolonyKierunekException e) {
+                System.out.println("Wybrano niedozwolony kierunek. " + e.getMessage());
+            }
         }
         System.out.println("Gra zakonczona");
     }
@@ -69,19 +67,7 @@ public class Swiat {
     }
 
     private void wykonajTure() {
-
-        // dla wszystkich organizmow chcemy wywolac akcje
-        // jesli w trakcie akcji dojdzie do kolizji, to chcemy na danym organizmie wywolac
-        // metode kolizja
-
-        // Taki zapis da: ConcurrentModificationException przez dodawanie organizmow w trakcie przechodzenia po nich
-        /*for(Organizm organizm : organizmy) {
-            organizm.akcja();
-        }*/
         Scanner scanner = new Scanner(System.in);
-        // znajdujemy czlowieka
-        // czlowiek.pobierzKolejnyRuch()
-        // potem akcja korzystalaby z pobranego wczesniej ruchu
         Optional<Czlowiek> czlowiek = wyszukajCzlowieka();
         czlowiek.ifPresentOrElse(Czlowiek::pobierzKolejnyRuch, scanner::nextLine);
 
@@ -150,7 +136,6 @@ public class Swiat {
 
     /**
      * Sprawdza czy rozgrywka powinna byc kontynuowana.
-     * TODO Docelowo metoda powinna weryfikowac czy gracz zyje
      * @return boolean
      */
     private boolean czyKontynuowacRozgrywke() {
